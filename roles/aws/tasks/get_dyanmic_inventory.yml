@@ -1,0 +1,15 @@
+---
+plugin: amazon.aws.aws_ec2
+regions: 
+  - "{{ aws_region }}"
+aws_access_key: "{{ aws_access_key }}"
+aws_secret_key: "{{ aws_secret_key }}"
+
+filters:
+  # All instances with their `Environment` tag set to `dev`
+  tag:Environment: "{{ ec2_tag }}"
+
+# Ignores 403 errors rather than failing
+strict_permissions: False
+keyed_groups:
+  - 
