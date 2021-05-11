@@ -1,9 +1,14 @@
 ---
-- hosts: localhost
-  connection: local
-  roles:
-  - role: aws
+# - hosts: localhost
+#   connection: local
+#   roles:
+#   - role: aws
+
+#   tasks: 
+#     - name: Refresh inventory to ensure new instances exist in inventory
+#       meta: refresh_inventory
 
 - hosts: all
+  remote_user: ec2-user
   roles:
-  - role: common
+  - role: webserver

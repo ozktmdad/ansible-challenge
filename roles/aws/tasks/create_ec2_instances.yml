@@ -1,73 +1,4 @@
 ---
-# find our security groups by VPC ID
-# - name: VPC security group facts
-#   ec2_group_info:
-#     filters:
-#       vpc-id: "{{ vpc_id }}"
-#   register: security_groups
-
-# parse the facts output and extract the IDs with some fancy filter work:
-# as the facts we are interested in are in a resuts array of dictionary items
-# - iterate each security group found by the facts query
-# - for that group, define a "name: id" entry in the `vpc_security_group_ids` dictionary (or empty dictionary if it doesn't exist)
-# - name: "create list: VPC security group IDs"
-#   set_fact:
-#     # vpc_security_group_ids: "{{ vpc_security_group_ids | default({}) | combine({ (item.group_name | default('default')): item.group_id }) }}"
-#     sg_DMZ: "{{ item }}"
-#      # Code would not working as per design and not letting me use a straight disctionary, problem with ansible version
-#     # Have to add dictionary item as array, ie an array of dictionaries. Ugly
-#   when: (item.group_name == "{{ project_name }}-WebDMZ")
-#   loop: "{{ security_groups.results }}"
-
-# - debug:
-#     var: sg_DMZ
-
-# - name: "set fact: VPC security group IDs"
-#   set_fact: 
-#     vpc_security_group_ids: "{{ vpc_security_group_ids_result.results | map(attribute='ansible_facts.vpc_security_group_ids_item') | list }}"
-
-# # Get security group
-# - name: set fact security-group
-#   set_fact:
-#     security_group: "{{ item.value }}"
-#   when: (item.key == "{{ project_name }}-WebDMZ")
-#   with_items: "{{ vpc_security_group_ids }}"
-
-# find the VPC by name
-# - name: VPC facts
-#   ec2_vpc_net_info:
-#     filters:
-#       "tag:Name": "{{ vpc_name }}"
-#   register: vpc_facts
-
-# # parse the facts output and extract the VPC ID
-# - name: "set fact: VPC ID"
-#   set_fact:
-#     vpc_id: "{{ vpc_facts.vpcs[0].id }}"
-
-# find our subnets by VPC ID that was just defined
-# - name: VPC subnet facts
-#   ec2_vpc_subnet_facts:
-#     filters:
-#       vpc-id: "{{ vpc_id }}"
-#   register: vpc_subnet_facts
-
-# parse the facts output and extract the IDs with some fancy filter work:
-# - iterate each subnet found by the facts query
-# - for that subnet, define a "name: id" entry in the `vpc_subnet_ids` dictionary (or empty dictionary if it doesn't exist)
-# - name: "create fact list: VPC subnet IDs"
-#   set_fact:
-#     vpc_subnet_ids_item: "{{ ({ 'key': item.tags.Name, 'value': item.subnet_id }) }}"
-#     # Code would not working as per design and not letting me use a straight disctionary, problem with ansible version
-#     # Have to add dictionary item as array, ie an array of dictionaries. Ugly
-#   with_items: "{{ vpc_subnet_facts.subnets }}"
-#   register: vpc_subnet_ids_item_result
-
-# - name: "set fact list: VPC subnet IDs"
-#   set_fact: 
-#     vpc_subnet_ids: "{{ vpc_subnet_ids_item_result.results | map(attribute='ansible_facts.vpc_subnet_ids_item') | list }}"
-
-
 # Pick a random subnet
 - name: Magic 8 ball of subnets
   set_fact:
@@ -94,19 +25,12 @@
   tags:
     - ec2_key
 
-#  - debug:
-#       var: keypair
-#    tags:
-#     - ec2_key
-
 - name: Copy EC2 Key Pair private key locally
-  copy: content="{{ keypair.key.private_key }}" dest={{ ec2_key_directory }}key.ppk
+  copy: 
+    content: "{{ keypair.key.private_key }}"
+    dest: "{{ ec2_key_directory }}/{{ keypair_name }}"
+    mode: 0600
   when: keypair.changed == true
-  tags:
-    - ec2_key
-
-# - debug:
-#     var: sg_DMZ
 
 - name: Create EC2 Instances
   ec2:

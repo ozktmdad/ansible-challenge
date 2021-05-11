@@ -2,6 +2,7 @@
 - include: create_vpc.yml
 - include: create_gateways.yml
 - include: create_ec2_instances.yml
+# - include: get_dyanmic_inventory.yml
 # playbook that runs our VPC tasks for any hosts in the `vpc` group, providing AWS credentials in the environment 
 # - name: Build VPC
   # environment:
