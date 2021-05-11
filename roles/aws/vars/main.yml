@@ -55,11 +55,11 @@ vpc_subnets:
     cidr: 10.0.6.0/24
     az: "{{ aws_region }}c"
 
-  # EC2 image details
-  ec2_image: ami-006c4604fe559cd9c
-  instance_type: t2.micro
-  instance_count: 2
-  ec2_tag: WebServer
-  ec2_key_directory: ~/.ssh/
-  keypair_name: ansible_challenge_key
+# EC2 image details
+ec2_image: ami-006c4604fe559cd9c
+instance_type: t2.micro
+instance_count: 2
+ec2_tag: WebServerAnsibleChallenge
+ec2_key_directory: ~/.ssh/
+keypair_name: ansible_challenge_key
   
