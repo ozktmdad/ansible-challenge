@@ -23,6 +23,9 @@
 - name: create internet gateway
   ec2_vpc_igw:
     vpc_id: "{{ vpc_id }}"
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
   register: create_gateway
 
 - name: "set facts: Gateway IDs and IP"
@@ -33,7 +36,6 @@
 - name: create route table for public subnets
   ec2_vpc_route_table:
     vpc_id: "{{ vpc_id }}"
-    region: "{{ aws_region }}"
     tags:
       Name: "{{ vpc_name }}-WebDMZ"
     subnets:
@@ -43,6 +45,9 @@
     routes:
       - dest: 0.0.0.0/0
         gateway_id: "{{ vpc_gateway_id }}"
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
   register: rt_DMZ
 
 # - name: create route table for ssh subnets

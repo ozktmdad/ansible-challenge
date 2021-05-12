@@ -1,12 +1,11 @@
-  - name: Install apache packages 
-    yum:
-      name: httpd
-      state: present
-      use_backend: yum
-    become: yes
+---
+- name: Install httpd packages 
+  dnf:
+    name: httpd
+    state: present
 
-  # - name: Enable and Start httpd
-  #   service:
-  #     name: httpd 
-  #     enabled: yes
-  #     state: started
+- name: Enable and Start httpd
+  service:
+    name: httpd 
+    enabled: yes
+    state: started

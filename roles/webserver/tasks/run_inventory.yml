@@ -1,4 +1,0 @@
----
-- name: Get hostname
-  # command: echo {{ ansible_hostname.split('-')[1] }}
-  command: whoami

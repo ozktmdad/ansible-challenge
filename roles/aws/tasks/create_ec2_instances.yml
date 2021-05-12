@@ -18,9 +18,9 @@
 - name: create a new ec2 key pair, returns generated private key
   ec2_key:
     name: "{{ keypair_name }}"
+    region: "{{ aws_region }}"
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
-    region: "{{ aws_region }}"
   register: keypair
   tags:
     - ec2_key
@@ -44,6 +44,13 @@
     key_name: "{{ keypair.key.name }}"
     count_tag: "{{ ec2_tag }}"
     exact_count: "{{ instance_count }}"
+    user_data: "{{ lookup('template', '../templates/cloud_config.yml.j2') }}"
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
+
+# Sleep for a little bit to wait for server to come up properly
+- name: Pause for 2 minutes to wait for ssh to come up
+  pause:
+    minutes: 2
+
     

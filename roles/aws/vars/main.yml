@@ -56,7 +56,8 @@ vpc_subnets:
     az: "{{ aws_region }}c"
 
 # EC2 image details
-ec2_image: ami-006c4604fe559cd9c
+# ec2_image: ami-006c4604fe559cd9c # AL2
+ec2_image: ami-044b21dabdfb78334 # RHEL 8.3
 instance_type: t2.micro
 instance_count: 2
 ec2_tag: WebServerAnsibleChallenge

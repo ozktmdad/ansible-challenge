@@ -1,3 +1,2 @@
 ---
-- include: run_inventory.yml
 - include: install_httpd.yml

@@ -7,6 +7,8 @@
     name: "{{ vpc_name }}"
     cidr_block: "{{ vpc_cidr_block }}"
     region: "{{ aws_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
   register: vpc_facts
 
 # parse the output of creating the VPC to extract the VPC ID -- we need to specify this in the subsequent tasks
@@ -22,6 +24,9 @@
     az: "{{ item.value.az }}"
     tags:
       Name: "{{ item.key }}"
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
   with_dict: "{{ vpc_subnets }}"
   register: create_vpc_subnets
 
@@ -47,6 +52,9 @@
     description: "{{ item.description }}"
     vpc_id: "{{ vpc_id }}"
     rules: "{{ item.rules }}"
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"    
   loop: "{{ vpc_security_groups }}"
   when: vpc_subnets is defined
   register: security_groups

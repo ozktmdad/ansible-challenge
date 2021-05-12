@@ -1,2 +1,4 @@
-
-amazon.aws
+# from galaxy install boto3 required for aws ansible commands
+# collections:
+#   - name: community.aws
+#     version: 1.4.0
