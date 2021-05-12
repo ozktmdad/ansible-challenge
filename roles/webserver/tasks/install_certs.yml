@@ -1,0 +1,28 @@
+- name: Creates directory "{{ key_path }}"
+  file:
+    path: "{{ key_path }}"
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Generate a Self Signed OpenSSL certificate
+  community.crypto.x509_certificate:
+    path: "{{ cert }}"
+    privatekey_path: "{{ key }}"
+    csr_path: /etc/ssl/csr/ansible.com.csr
+    provider: selfsigned
+
+- name: Generate DH Parameters with a different size (2048 bits)
+  community.crypto.openssl_dhparam:
+    path: "{{ dhparam }}"
+    size: 2048
+
+- name: Find the contents of "{{ cert }}" and assign to variable
+  ansible.builtin.shell: cat "{{ cert }}""
+  register: selfsigned_contents
+
+- name: Manually append "{{ dhparam }}" to "{{ cert }}"
+  command: cat "{{ dhparam }}" | tee -a "{{ cert }}"
+  when: selfsigned_contents.stdout.find('BEGIN DH PARAMETERS') != -1
