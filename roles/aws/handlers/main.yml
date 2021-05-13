@@ -2,3 +2,9 @@
 - name: Pause
   pause:
     seconds: 120
+
+- name: Copy EC2 Key Pair private key locally
+  copy:
+    content: "{{ keypair.key.private_key }}"
+    dest: "{{ private_key }}"
+    mode: 0600

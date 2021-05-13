@@ -1,3 +1,10 @@
+# For whatever reason docroot creation is not idempotent
+# changes value whenever contents of docroot change
+- name: check directory
+  stat:
+    path: "{{ docroot }}"
+  register: dir_data
+
 - name: Creates directory "{{ docroot }}"
   file:
     path: "{{ docroot }}"

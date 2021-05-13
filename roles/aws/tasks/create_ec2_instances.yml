@@ -21,16 +21,7 @@
     region: "{{ aws_region }}"
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
-  register: keypair
-  tags:
-    - ec2_key
-
-- name: Copy EC2 Key Pair private key locally
-  copy: 
-    content: "{{ keypair.key.private_key }}"
-    dest: "{{ private_key }}"
-    mode: 0600
-  when: keypair.changed == true
+  notify: Copy EC2 Key Pair private key locally
 
 # Create a check if instance exists
 - name: Get all EC2 Instances
@@ -44,17 +35,19 @@
 
 - name: Auto set fact value to false exists
   set_fact:
-    "server_{{ item.tags.Name }}_not_exist": true
-  with_items: "{{ ec2_facts.instances }}"
+    not_exist:
+      "{{ item.key }}": true
+  with_dict: "{{ one_page_challenge }}"
 
 - name: Set fact if name exists
   set_fact:
-    "server_{{ item.tags.Name }}_not_exist": false
-  when: ("{{ one_page_challenge }}.{{ item.tags.Name }} is defined")
+    not_exist:
+      "{{ item.tags.Name }}": false
+  when: one_page_challenge[item.tags.Name] is defined
   with_items: "{{ ec2_facts.instances }}"
 
 - debug:
-      var: server_insult_not_exist
+    msg: "{{ insult_not_exist }}"
 
 - name: Create EC2 Instances
   ec2:
@@ -74,7 +67,7 @@
     user_data: "{{ lookup('template', '../templates/cloud_config.yml.j2') }}"
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
-  when: server_{{ item.key }}_not_exist|bool
+  when: not_exist[item.key]
   with_dict: "{{ one_page_challenge }}"
   notify:
     - Pause

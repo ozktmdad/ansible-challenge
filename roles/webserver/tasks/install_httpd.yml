@@ -7,6 +7,6 @@
 
 - name: Enable and Start httpd
   service:
-    name: httpd 
+    name: httpd
     enabled: yes
     state: started

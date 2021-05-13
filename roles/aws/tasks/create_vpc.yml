@@ -54,7 +54,7 @@
     rules: "{{ item.rules }}"
     region: "{{ aws_region }}"
     aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"    
+    aws_secret_key: "{{ aws_secret_key }}"
   loop: "{{ vpc_security_groups }}"
   when: vpc_subnets is defined
   register: security_groups

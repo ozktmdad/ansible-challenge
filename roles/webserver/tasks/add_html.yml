@@ -1,0 +1,23 @@
+---
+# Set fact based on hostname
+- name: Get all EC2 Instances for one_page_challenge servers
+  connection: local
+  become: no
+  ec2_instance_info:
+    filters:
+      "tag:html": one_page_challenge
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+  register: ec2_facts
+
+# Get file download file
+- name: download and install one_page_challenge
+  get_url:
+    url: "{{ one_page_challenge[item.tags.Name] }}"
+    dest: "{{ docroot }}/index.html"
+    mode: 0644
+    owner: root
+    group: root
+  when: item.public_dns_name == inventory_hostname
+  with_items: "{{ ec2_facts.instances }}"
