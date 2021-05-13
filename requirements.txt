@@ -4,3 +4,4 @@ boto3>=1.9.249
 urllib3>=1.26.4
 chardet>=3.0.4
 requests>=2.25.1
+python-pyOpenSSL
