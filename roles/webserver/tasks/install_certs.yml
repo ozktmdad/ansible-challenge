@@ -9,9 +9,9 @@
 
 
 - name: Generate openssl private key
-  - openssl_privatekey:
-      path: "{{ key }}"
-      size: 2048
+  openssl_privatekey:
+    path: "{{ key }}"
+    size: 2048
 
 - name: Generate csr
   openssl_csr:
@@ -23,7 +23,7 @@
     provider: selfsigned
     path: "{{ cert }}"
     privatekey_path: "{{ key }}"
-    csr_path: "{{ csr }}"\
+    csr_path: "{{ csr }}"
 
 #   community.crypto.x509_certificate:
 #     path: "{{ cert }}"
@@ -31,15 +31,15 @@
 #     # csr_path: /etc/ssl/csr/ansible.com.csr
 #     provider: selfsigned
 
-- name: Generate DH Parameters with a different size (2048 bits)
-  openssl_dhparam:
-    path: "{{ dhparam }}"
-    size: 2048
+# - name: Generate DH Parameters with a different size (2048 bits)
+#   openssl_dhparam:
+#     path: "{{ dhparam }}"
+#     size: 2048
 
-- name: Find the contents of "{{ cert }}" and assign to variable
-  ansible.builtin.shell: cat "{{ cert }}"
-  register: selfsigned_contents
+# - name: Find the contents of "{{ cert }}" and assign to variable
+#   ansible.builtin.shell: cat "{{ cert }}"
+#   register: selfsigned_contents
 
-- name: Manually append "{{ dhparam }}" to "{{ cert }}"
-  command: cat "{{ dhparam }}" | tee -a "{{ cert }}"
-  when: selfsigned_contents.stdout.find('BEGIN DH PARAMETERS') != -1
+# - name: Manually append "{{ dhparam }}" to "{{ cert }}"
+#   command: cat "{{ dhparam }}" | tee -a "{{ cert }}"
+#   when: selfsigned_contents.stdout.find('BEGIN DH PARAMETERS') != -1

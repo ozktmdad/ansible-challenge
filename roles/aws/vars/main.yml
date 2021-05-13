@@ -26,7 +26,10 @@ vpc_dns_zone: ansiblechallenge
 vpc_cidr_block: 10.0.0.0/16
 
 # External port number to access the app through
-external_port: 443
+ssh_port: 22
+http_port: 80
+https_port: 443
+
 
 # a list defining the security groups for our VPC
 vpc_security_groups:
@@ -36,11 +39,13 @@ vpc_security_groups:
       - proto: tcp
         cidr_ip: 0.0.0.0/0
         ports:
-          - "{{ external_port }}"
-      - proto: tcp
-        cidr_ip: 0.0.0.0/0
-        ports:
-          - 22
+          - "{{ ssh_port }}"
+          - "{{ http_port }}"
+          - "{{ https_port }}"
+      # - proto: tcp
+      #   cidr_ip: 0.0.0.0/0
+      #   ports:
+      #     - 22
 
 # a map defining the subnets we will build in the VPC
 # Only using az a, b and c as there are only 3 az's in my test AWS site Sydney

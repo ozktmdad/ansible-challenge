@@ -1,12 +1,12 @@
 ---
-# - hosts: localhost
-#   connection: local
-#   roles:
-#   - role: aws
+- hosts: localhost
+  connection: local
+  roles:
+  - role: aws
 
-#   tasks: 
-#     - name: Refresh inventory to ensure new instances exist in inventory
-#       meta: refresh_inventory
+  tasks: 
+    - name: Refresh inventory to ensure new instances exist in inventory
+      meta: refresh_inventory
 
 # Yes this is lazy
 - hosts: ec2
