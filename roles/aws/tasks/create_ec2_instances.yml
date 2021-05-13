@@ -28,9 +28,33 @@
 - name: Copy EC2 Key Pair private key locally
   copy: 
     content: "{{ keypair.key.private_key }}"
-    dest: "{{ ec2_key_directory }}/{{ keypair_name }}"
+    dest: "{{ private_key }}"
     mode: 0600
   when: keypair.changed == true
+
+# Create a check if instance exists
+- name: Get all EC2 Instances
+  ec2_instance_info:
+    filters:
+      "tag:html": one_page_challenge
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+  register: ec2_facts
+
+- name: Auto set fact value to false exists
+  set_fact:
+    "server_{{ item.tags.Name }}_not_exist": true
+  with_items: "{{ ec2_facts.instances }}"
+
+- name: Set fact if name exists
+  set_fact:
+    "server_{{ item.tags.Name }}_not_exist": false
+  when: ("{{ one_page_challenge }}.{{ item.tags.Name }} is defined")
+  with_items: "{{ ec2_facts.instances }}"
+
+- debug:
+      var: server_insult_not_exist
 
 - name: Create EC2 Instances
   ec2:
@@ -44,13 +68,16 @@
     key_name: "{{ keypair.key.name }}"
     count_tag: "{{ ec2_tag }}"
     exact_count: "{{ instance_count }}"
+    instance_tags:
+       Name: "{{ item.key }}"
+       html: one_page_challenge
     user_data: "{{ lookup('template', '../templates/cloud_config.yml.j2') }}"
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
+  when: server_{{ item.key }}_not_exist|bool
+  with_dict: "{{ one_page_challenge }}"
+  notify:
+    - Pause
 
-# Sleep for a little bit to wait for server to come up properly
-- name: Pause for 2 minutes to wait for ssh to come up
-  pause:
-    minutes: 2
-
-    
+- name: Refresh inventory
+  meta: refresh_inventory

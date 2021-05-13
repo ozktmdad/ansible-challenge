@@ -1,3 +1,13 @@
+---
+# For whatever reason key_path creation is not idempotent
+# it always creates/changes key_path
+# This is dirty workaround
+- name: check directory
+  stat:
+    path: "{{ key_path }}"
+  register: dir_data
+
+
 - name: Creates directory "{{ key_path }}"
   file:
     path: "{{ key_path }}"
@@ -6,6 +16,7 @@
     owner: root
     group: root
     mode: '0755'
+  when: not dir_data.stat.exists
 
 
 - name: Generate openssl private key

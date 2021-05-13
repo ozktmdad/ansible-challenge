@@ -1,0 +1,4 @@
+---
+- name: Pause
+  pause:
+    seconds: 120

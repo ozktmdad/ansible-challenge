@@ -1,6 +1,7 @@
 ---
 
 # credentials for AWS (encrypted useing a value key)
+project_name: ansible_challenge
 aws_region: ap-southeast-2
 aws_access_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -64,8 +65,8 @@ vpc_subnets:
 # ec2_image: ami-006c4604fe559cd9c # AL2
 ec2_image: ami-044b21dabdfb78334 # RHEL 8.3
 instance_type: t2.micro
-instance_count: 2
+instance_count: 1
 ec2_tag: WebServerAnsibleChallenge
-ec2_key_directory: ~/.ssh/
-keypair_name: ansible_challenge_key
+# ec2_key_directory: ~/.ssh/
+# keypair_name: ansible_challenge_key
   

@@ -4,9 +4,11 @@
   roles:
   - role: aws
 
-  tasks: 
-    - name: Refresh inventory to ensure new instances exist in inventory
-      meta: refresh_inventory
+  # tasks: 
+  #   - name: Refresh inventory to ensure new instances exist in inventory
+  #     meta: refresh_inventory
+  #     pause:
+  #       seconds: 120
 
 # Yes this is lazy
 - hosts: ec2
@@ -40,7 +42,7 @@
   remote_user: ec2-user
   become: yes
   vars:
-    ansible_ssh_private_key_file: ~/.ssh/ansible_challenge_key
+    ansible_ssh_private_key_file: "{{ private_key }}"
   roles:
   - role: webserver
       
