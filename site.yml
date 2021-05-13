@@ -1,0 +1,42 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+  - role: aws
+
+
+# Yes this is lazy
+- hosts: ec2
+  connection: local
+  gather_facts: False
+
+  tasks:
+    - name: "check if known_hosts contains server's fingerprint"
+      command: ssh-keygen -F {{ inventory_hostname }}
+      register: keygen
+      failed_when: keygen.stderr != ''
+      changed_when: False
+
+    - name: fetch remote ssh key
+      command: ssh-keyscan -T5 {{ inventory_hostname }}
+      register: keyscan
+      failed_when: keyscan.rc != 0 or keyscan.stdout == ''
+      changed_when: False
+      when: keygen.rc == 1
+
+    - name: add ssh-key to local known_hosts
+      lineinfile:
+        name: ~/.ssh/known_hosts
+        create: yes
+        line: "{{ item }}"
+      when: keygen.rc == 1
+      with_items: '{{ keyscan.stdout_lines|default([]) }}'
+
+- hosts: tag_html_one_page_challenge
+  gather_facts: False
+  remote_user: ec2-user
+  become: yes
+  vars:
+    ansible_ssh_private_key_file: "{{ private_key }}"
+  roles:
+  - role: webserver

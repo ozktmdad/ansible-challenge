@@ -1,0 +1,5 @@
+# from galaxy install boto3 required for aws ansible commands
+collections:
+#   - name: community.crypto
+#   - name: community.aws
+#     version: 1.4.0

@@ -1,0 +1,36 @@
+---
+# For whatever reason key_path creation is not idempotent
+# it always creates/changes key_path
+# This is dirty workaround
+- name: check directory
+  stat:
+    path: "{{ key_path }}"
+  register: dir_data
+
+
+- name: Creates directory "{{ key_path }}"
+  file:
+    path: "{{ key_path }}"
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+    mode: '0755'
+  when: not dir_data.stat.exists
+
+- name: Generate openssl private key
+  openssl_privatekey:
+    path: "{{ key }}"
+    size: 2048
+
+- name: Generate csr
+  openssl_csr:
+    path: "{{ csr }}"
+    privatekey_path: "{{ key }}"
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    provider: selfsigned
+    path: "{{ cert }}"
+    privatekey_path: "{{ key }}"
+    csr_path: "{{ csr }}"

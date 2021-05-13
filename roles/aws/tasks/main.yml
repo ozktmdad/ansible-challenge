@@ -1,0 +1,4 @@
+---
+- include: create_vpc.yml
+- include: create_gateways.yml
+- include: create_ec2_instances.yml

@@ -1,0 +1,12 @@
+---
+- name: Install httpd packages ans openssl packages
+  dnf:
+    name: ['httpd', 'mod_ssl', 'openssl']
+    state: present
+    update_cache: yes
+
+- name: Enable and Start httpd
+  service:
+    name: httpd
+    enabled: yes
+    state: started

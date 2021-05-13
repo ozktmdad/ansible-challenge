@@ -1,0 +1,12 @@
+<VirtualHost *:443>
+    ServerName {{ inventory_hostname }}
+    DocumentRoot {{ docroot }}
+    SSLEngine on
+    SSLCertificateFile {{ cert }}
+    SSLCertificateKeyFile {{ key }}
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerName {{ inventory_hostname }}
+    Redirect / https://{{ inventory_hostname }}/
+</VirtualHost>
