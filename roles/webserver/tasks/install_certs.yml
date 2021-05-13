@@ -11,7 +11,7 @@
   community.crypto.x509_certificate:
     path: "{{ cert }}"
     privatekey_path: "{{ key }}"
-    csr_path: /etc/ssl/csr/ansible.com.csr
+    # csr_path: /etc/ssl/csr/ansible.com.csr
     provider: selfsigned
 
 - name: Generate DH Parameters with a different size (2048 bits)
@@ -20,7 +20,7 @@
     size: 2048
 
 - name: Find the contents of "{{ cert }}" and assign to variable
-  ansible.builtin.shell: cat "{{ cert }}""
+  ansible.builtin.shell: cat "{{ cert }}"
   register: selfsigned_contents
 
 - name: Manually append "{{ dhparam }}" to "{{ cert }}"

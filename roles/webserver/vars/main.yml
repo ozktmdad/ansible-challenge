@@ -2,8 +2,8 @@
 key_path: /etc/ssl/private
 cert_path: /etc/ssl/certs
 key: "{{ key_path }}/apache-selfsigned.key"
-cert: "{{ cert }}/apache-selfsigned.crt"
-dhparam: "{{ cert }}/dhparam.pem"
+cert: "{{ cert_path }}/apache-selfsigned.crt"
+dhparam: "{{ cert_path }}/dhparam.pem"
 config_path: /etc/httpd/conf.d
 ssl_config: "{{ config_path }}/ssl.conf"
 non_ssl_config: "{{ config_path }}/non-ssl.conf"

@@ -10,7 +10,7 @@
 - name: Install virtual host template
   template:
     src: ../templates/virtual_host.conf.j2
-    dest: "{{ config_path }}"/"{{ inventory_hostname }}".conf
+    dest: "{{ config_path }}/{{ inventory_hostname }}.conf"
     owner: 'root'
     group: 'root'
     mode: '0644'
