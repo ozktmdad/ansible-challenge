@@ -9,3 +9,14 @@
     name: chronyd
     enabled: yes
     state: started
+
+- name: Enable and start sshd
+  service:
+    name: sshd
+    enabled: yes
+    state: started
+
+- name: Restart sshd
+  service:
+    name: sshd
+    state: restarted
