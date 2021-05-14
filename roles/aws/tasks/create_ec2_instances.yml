@@ -62,7 +62,7 @@
     user_data: "{{ lookup('template', '../templates/cloud_config.yml.j2') }}"
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
-  # when: item.key not in server_exist
+  when: item.key not in server_exist
   with_dict: "{{ one_page_challenge }}"
   notify:
     - Pause

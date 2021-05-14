@@ -13,6 +13,7 @@
     owner: root
     group: root
     mode: '0755'
+  when: not dir_data.stat.exists
 
 - name: Install virtual host template
   template:
