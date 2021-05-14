@@ -1,13 +1,8 @@
 # Ansible Managed  Do not modify
 #
-# NTP Servers (minimum of 3 required)
-{% for ntp_server in ntp_servers %}
-pool {{ ntp_server }} iburst
-{% endfor %}
- 
-# PTP device
-{% for ptp_device in ptp_devices %}
-refclock PHC "{{ ptp_device }}" poll 3 dpoll -2 offset 0
+# NTP Pool Servers (minimum of 3 required)
+{% for pool_server in pool_servers %}
+pool {{ pool_server }} iburst
 {% endfor %}
  
 # Record the rate at which the system clock gains/losses time.
@@ -32,8 +27,3 @@ leapsectz right/UTC
  
 # Specify directory for log files.
 logdir /var/log/chrony
-
-
-Confidential communication
-Westpac Banking Corporation (ABN 33 007 457 141, AFSL 233714)
-Westpac Institutional Bank is a division of Westpac Banking Corporation

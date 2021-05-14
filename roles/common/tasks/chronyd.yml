@@ -8,7 +8,7 @@
   dnf:
     name: chrony
     state: present
-  notifies: Enable and start chrony
+  notify: Enable and start chrony
 
 - name: Install chrony.conf template
   template:

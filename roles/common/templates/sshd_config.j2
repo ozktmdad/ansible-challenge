@@ -1,9 +1,6 @@
-# CHEF Managed – Do not modify
-# Only allow ssh V2
-Protocol 2
+# Ansible Managed – Do not modify
 # Deny root
 PermitRootLogin {{ permitrootlogin }}
-
  
 # Logging
 SyslogFacility AUTHPRIV
@@ -59,7 +56,7 @@ AcceptEnv XMODIFIERS
 # Allow SFTP
 Subsystem    sftp    {{ sftp_server }}
  
-{% if listenaddress is defined and listenaddress|length %}
+{% if listenaddress is defined %}
 {% for restrict_address in listenaddress %}
 ListenAddress {{ restrict_address }}
 {% endfor %}
@@ -104,7 +101,7 @@ Match all
  
 # Additional non standard options
  
-{% if options is defined and options|length %}
+{% if options is defined %}
 {% for option in options %}
 {{ option }}
 {% endfor %}

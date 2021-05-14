@@ -1,3 +1,4 @@
+---
 - name: "check if known_hosts contains server's fingerprint"
   command: ssh-keygen -F {{ inventory_hostname }}
   register: keygen
