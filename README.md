@@ -1,5 +1,18 @@
 # Ansible Technical Challenge
 
+This test uses ansible to:
+- Create VPC in AWS
+- Deploy a minimum of two virtual machines in AWS VPC, you can add more by editing the one_page_challenge dictionary variable in group_vars/all.yml
+- Use dynamic inventory to add new virtual machines to ansibles inventory
+- Some basic configuration management to the systems has been deployed deploy (e.g. chrony, timezone, SSH hardening, installing packages that should be in a Linux SOE).
+- The virtual machines have httpd installed and using self signing certificates to host a different html file from https://onehtmlpagechallenge.com/:
+  - Strange Insults
+	- A Tribute Page
+  (you can add more by editing the one_page_challenge dictionary variable in group_vars/all.yml)
+- Playbooks/roles should be idempotent
+
+
+
 Hi there, welcome to our git repo for a basic ansible skills test for a position in our technical team.
 
 While this test is somewhat farcical, the objective is to get a sense of your ansible skills by having you deploy some infrastructure with some static content hosted on it. We'd like you to fork our git repository, add your submission and send a link for us to clone it on completion. We'll then test it out in our lab and marvel at your good work. The expectation is that this should take no more than a few hours to complete (no need to boil the ocean).
