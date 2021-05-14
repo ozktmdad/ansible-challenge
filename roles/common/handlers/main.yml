@@ -1,0 +1,11 @@
+---
+- name: Restart chronyd
+  service:
+    name: chronyd
+    state: restarted
+
+- name: Enable and start chrony
+  service:
+    name: chronyd
+    enabled: yes
+    state: started

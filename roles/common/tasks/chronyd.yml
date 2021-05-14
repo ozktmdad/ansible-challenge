@@ -1,0 +1,20 @@
+---
+- name: Ensure ntp is removed
+  dnf:
+    name: [ntp, ntpdate]
+    state: absent
+
+- name: Install chrony
+  dnf:
+    name: chrony
+    state: present
+  notifies: Enable and start chrony
+
+- name: Install chrony.conf template
+  template:
+    src: ../templates/chrony.conf.j2
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart chronyd
