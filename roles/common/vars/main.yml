@@ -1,0 +1,35 @@
+---
+pool_servers: [ 
+  1.rhel.pool.ntp.org,
+  2.rhel.pool.ntp.org,
+  3.rhel.pool.ntp.org,
+  4.rhel.pool.ntp.org
+  ]
+timezone: Australia/Melbourne
+packages_present: [
+  sysstat,
+  coreutils,
+  man,
+  openssl,
+  vim,
+  python3,
+  man-db
+]
+packages_absent: []
+
+# ssh vars
+permitrootlogin: 'no'
+passwordAuthentication: 'yes'
+clientaliveinterval: 180
+x11forwarding: 'no'
+sftp_server: /usr/libexec/openssh/sftp-server
+print_motd: 'yes'
+listenaddress: []
+options: []
+challengeresponseauthentication: 'no'
+pubkeyauthentication: 'yes'
+twofaenabled: 'false'
+blockposix_enabled: 'false'
+privileged_proxy_accounts: privileged_proxy_accounts
+maxstartups: 10:30:60
+maxsessions: 4

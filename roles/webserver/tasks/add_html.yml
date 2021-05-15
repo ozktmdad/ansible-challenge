@@ -16,6 +16,7 @@
   get_url:
     url: "{{ one_page_challenge[item.tags.Name] }}"
     dest: "{{ docroot }}/index.html"
+    force: yes
     mode: 0644
     owner: root
     group: root

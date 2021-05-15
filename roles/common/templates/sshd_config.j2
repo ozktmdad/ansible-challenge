@@ -1,0 +1,108 @@
+# Ansible Managed – Do not modify
+# Deny root
+PermitRootLogin {{ permitrootlogin }}
+ 
+# Logging
+SyslogFacility AUTHPRIV
+ 
+# Enable cleartext SSH encrypted passwords
+PasswordAuthentication {{ passwordAuthentication }}
+ 
+# The server disconnects after this time if the user has not successfully logged in.
+LoginGraceTime 60
+ 
+# Enabling environment processing may enable users to bypass access restrictions in some configurations using mechanisms such as LD_PRELOAD
+PermitUserEnvironment no
+ 
+# Specifies the maximum number of authentication attempts permitted per connection.
+MaxAuthTries 4
+ 
+# When password authentication is allowed, it specifies whether the server allows login to accounts with empty password strings.
+PermitEmptyPasswords no
+ 
+# Gives the verbosity level that is used when logging messages from sshd.
+LogLevel INFO
+ 
+# Specifies that .rhosts and .shosts files will not be used in HostbasedAuthentication.
+IgnoreRhosts yes
+ 
+# Specifies whether rhosts or /etc/hosts.equiv authentication together with successful public key client host authentication is allowed (host-based authentication).
+HostbasedAuthentication no
+ 
+# Sets a timeout interval in seconds after which if no data has been received from the client
+ClientAliveInterval {{ clientaliveinterval }}
+ 
+# Change to no to disable s/key passwords
+ChallengeResponseAuthentication {{ challengeresponseauthentication }}
+ 
+# Disable GSSAPIAuthentication
+GSSAPIAuthentication no
+ 
+# Enable PAM authentication
+UsePAM yes
+ 
+#Hold Connections open
+ClientAliveCountMax 1
+ 
+# Allow x11 forwarding
+X11Forwarding {{ x11forwarding }}
+ 
+# Accept locale-related environment variables
+AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
+AcceptEnv XMODIFIERS
+ 
+# Allow SFTP
+Subsystem    sftp    {{ sftp_server }}
+ 
+{% if listenaddress is defined %}
+{% for restrict_address in listenaddress %}
+ListenAddress {{ restrict_address }}
+{% endfor %}
+{% endif %}
+ 
+# default banner path
+Banner /etc/issue
+ 
+# Print Motd
+PrintMotd {{ print_motd }}
+ 
+# MaxStartups specifies the maximum number of concurrent unauthenticated connections
+#to the SSH daemon.
+MaxStartups {{ maxstartups }}
+ 
+# MaxSessions specifies the maximum number of open shell, login or subsystem
+# sessions permitted per network connection
+MaxSessions {{ maxsessions }}
+ 
+# Public Key Authentication
+PubkeyAuthentication {{ pubkeyauthentication }}
+ 
+{% if twofaenabled %}
+# 2FA is enabled, allowing sshkeys by exception
+Match Group no2fa
+  PubkeyAuthentication yes
+Match all
+ 
+Match Group no2fa_{{ inventory_hostname }}
+  PubkeyAuthentication yes
+Match all
+{% endif %}
+ 
+{% if blockposix_enabled %}
+# Block SSH key for POSIX group
+Match Group {{ privileged_proxy_accounts }}
+  PubkeyAuthentication no
+ 
+Match all
+{% endif %}
+ 
+ 
+# Additional non standard options
+ 
+{% if options is defined %}
+{% for option in options %}
+{{ option }}
+{% endfor %}
+{% endif %}

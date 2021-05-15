@@ -49,16 +49,3 @@
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
   register: rt_DMZ
-
-# - name: create route table for ssh subnets
-#   ec2_vpc_route_table:
-#     vpc_id: "{{ vpc_id }}"
-#     tags:
-#       Name: "{{ vpc_name }}-SSH"
-#     subnets:
-#       - "{{ public_a_subnet_id }}"
-#       - "{{ public_b_subnet_id }}"
-#       - "{{ public_c_subnet_id }}"
-#     routes:
-#       - dest: 0.0.0.0/0
-#         gateway_id: "{{ vpc_gateway_id }}"

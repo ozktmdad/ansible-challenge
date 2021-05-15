@@ -1,0 +1,32 @@
+---
+- name: Install openssh just in case its missing, which it won't
+  dnf:
+    name: openssh-server
+    state: present
+  notify: Enable and start sshd
+
+- name: Install sshd_config template
+  template:
+    src: ../templates/sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: 0600
+  notify: Restart sshd
+
+- name: Install issue file
+  template:
+    src: ../templates/issue
+    dest: "/etc/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop: [ issue, issue.net ]
+
+- name: Install rhel8 sshd file
+  template:
+    src: ../templates/sshd.rhel8
+    dest: /etc/sysconfig/sshd
+    owner: root
+    group: root
+    mode: 0640

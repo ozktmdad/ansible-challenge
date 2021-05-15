@@ -1,0 +1,6 @@
+---
+- include: add_fingerprint.yml
+- include: soe_packages.yml
+- include: timezone.yml
+- include: chronyd.yml
+- include: ssh.yml

@@ -1,0 +1,10 @@
+---
+- name: SOE packages that must be installed
+  dnf:
+    name: "{{ packages_present }}"
+    state: present
+
+- name: Packages that must not be installed on the SOE
+  dnf:
+    name: "{{ packages_absent }}"
+    state: absent

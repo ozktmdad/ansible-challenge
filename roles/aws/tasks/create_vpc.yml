@@ -36,8 +36,6 @@
 - name: "create fact list: VPC subnet IDs"
   set_fact:
     vpc_subnet_ids_item: "{{ ({ 'key': item.subnet.tags.Name, 'value': item.subnet.id }) }}"
-    # Code would not working as per design and not letting me use a straight disctionary, problem with ansible version
-    # Have to add dictionary item as array, ie an array of dictionaries. Ugly
   with_items: "{{ create_vpc_subnets.results }}"
   register: vpc_subnet_ids_item_result
 
@@ -58,16 +56,3 @@
   loop: "{{ vpc_security_groups }}"
   when: vpc_subnets is defined
   register: security_groups
-
-# create an EC2 key -- pretty simple
-# - name: create EC2 key
-#   ec2_key:
-#     name: "{{ vpc_key }}"
-
-# # create a private hosted zone for the VPC with the Ansible module
-# - name: create Route 53 private hosted zone
-#   route53_zone:
-#     zone: "{{ vpc_dns_zone }}"
-#     state: present
-#     vpc_id: "{{ vpc_id }}"
-#     vpc_region: "{{ aws_region }}"
