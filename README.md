@@ -2,56 +2,92 @@
 
 This test uses ansible to:
 - Create VPC in AWS
-- Deploy a minimum of two virtual machines in AWS VPC, you can add more by editing the one_page_challenge dictionary variable in group_vars/all.yml
+- Deploy a minimum of two RHEL8 virtual machines in AWS VPC, you can add more by editing the one_page_challenge dictionary variable in group_vars/all.yml
 - Use dynamic inventory to add new virtual machines to ansibles inventory
 - Some basic configuration management to the systems has been deployed deploy (e.g. chrony, timezone, SSH hardening, installing packages that should be in a Linux SOE).
 - The virtual machines have httpd installed and using self signing certificates to host a different html file from https://onehtmlpagechallenge.com/:
   - Strange Insults
 	- A Tribute Page
-  (you can add more by editing the one_page_challenge dictionary variable in group_vars/all.yml)
+  (you can add more or change onepagehtmlpagechallenge by editing the one_page_challenge dictionary variable in group_vars/all.yml)
 - Playbooks/roles should be idempotent
 
+## Prerequisites
 
+# Software Prerequsites (as tested)
+Lower levels of software may work.  These versions were used and tested by the developer.
 
-Hi there, welcome to our git repo for a basic ansible skills test for a position in our technical team.
+ansible >= 2.9.21
 
-While this test is somewhat farcical, the objective is to get a sense of your ansible skills by having you deploy some infrastructure with some static content hosted on it. We'd like you to fork our git repository, add your submission and send a link for us to clone it on completion. We'll then test it out in our lab and marvel at your good work. The expectation is that this should take no more than a few hours to complete (no need to boil the ocean).
-
-If you have any questions, or anything in the challenge is not clear, please reach out to us so that we can promptly provide clarification.
-
-## Scope of the test:
-
-The website https://onehtmlpagechallenge.com/ has a selection of little projects each in a single html file. We'd like you to choose a minimum of two of them and:
-
-- Use Ansible deploy a minimum of two virtual machines on the cloud or hypervisor of your choice (public cloud preferred, however if you have a lab using VMware, KVM etc that's absolutely fine).
-- The virtual machines should have httpd installed and each host a different html file for example:
-	- Virtual Machine #1 hosts html file with the car game and Virtual Machine #2 hosts the html file with the snake game.
-	- Both Virtual machines should be deployed together along with the associated software installation and configuration.
-- Any required VPCs, network security groups, SSH key pairs etc should be included as part of your infrastructure deployment.
-- Add some basic configuration management to the systems you deploy (e.g. chrony, timezone, SSH hardening, installing packages that you find useful and should be in a Linux SOE).
-- Think about security hardening of the infrastructure and operating systems you deploy. Additionally securing the webservices with SSL. Self-signed certs are fine.
-- Your playbooks/roles should be idempotent and pass ansible-lint.
-- Ideally you will use a dynamic inventory as part of your submission.
-- Using content from ansible-galaxy is fine, however we'd like to see your work rather than making efficient use of community provided content.
-- Don't overthink or over-engineer it, however we'd like to see effective use of loops/variables/logic in your submission.
-- How you lay out the playbooks/tasks/roles is up to you. There is a basic structure in this repository to get you started.
-
-Essentially the way we will be testing this is by doing the following:
-
+- python requirements, install via pip or use
+To install python requirements please ins
 ```
-ansible-lint site.yml
-ansible-galaxy collection install -r collections/requirements.yml
-ansible-playbook -i inventory/<your dynamic inventory script> site.yml
+python -m pip install -r requirements.txt
+```
+# AWS Account Prerequiste 
+Have configured AWS aws_access_key_id and secret access key IAM access abitiy to create, VPC and EC2instances.  (If you don't know how to do this you probably shouldn't be assessing me)
+
+## Clone
+- Clone this repo to your local machine using 
+git clone https://github.com/ozktmdad/ansible-challenge.git
+
+## Setup
+
+# Configure password vault
+
+- Create vault password similar to ssh key to encrypt your usernames and passwords in playbook
+```shell
+$ echo "myvaultkey" > ~/ansible_challenge.vault
 ```
 
-## Submission Criteria:
+Please use a stronger key than "myvaultkey" I would recommend using a 2048 bit key as it makes me feel like it is actually secure.
 
-- There should not be any manual steps, we should be able to clone your repository and run your site.yml to deploy everything in one shot.
-- Any pre-requisites should be documented clearly.
-- Use the Linux distribution of your choice, however one of Fedora/CentOS/RHEL is preferred.
-- There should be no passwords or keypairs etc in your repository. Anything sensitive you have in there should be protected with ansible vault at a minimum.
+- Create two encrypted passwords using ansible-vault and techchallenge vault
+1. aws_access_key_id
+2. aws_secret_access_key
+
+```shell
+$ ansible-vault encrypt_string "AZRXC5HHHBYVAKDAFJ4" --vault-password-file ~/techchallenge.vault
+!vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          38643064656331346431393332366133306439663532626131613532646138376165306431633937
+          3330646664333730346462383262313631376664643366620a666231326637343830306532303531
+          65393966616132373234323739616338313837316162343565346562316138323338336234353062
+          3066376364383034310a643863623038353765316666393065373266386438643938333061313331
+          63376330373861323537303737343134623962376663366262653235343366386630
+Encryption successful
+$ ansible-vault encrypt_string "ajdfkakfak4r4r4rnkafa6767jfafk" --vault-password-file ~/techchallenge.vault
+!vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          39666536353561636437613131626236343864343064666538363964656662313534373761366461
+          3639663762646538373332323439643261356232366131650a376632613636643665313737636162
+          63323961306437346532636134383761313931663830303736663362373836646165313736616361
+          6633616337613930650a333062653136636437346236653232303361336166383232373831356662
+          66303661376562623136313465623765643938346431386564656335386562613365
+Encryption successful
+```
+# Update encrypted passwords in the app
+The access_key and secret key need to be updated in two places.  Yeah I know this is bad, but the inventory just didn't like using global variables.
+
+Open file group_vars/all.yml and update variables:
+- aws_access_key
+- aws_secret_key
+
+Open file inventory/ap-southeast-2_aws_ec2.yml and update variables:
+- aws_access_key
+- aws_secret_key
+
+## Usage
+After all the prereq work has been done, your ready to run.
+
+Run ansible playbook to deploy the solution:
+
+```
+ansible-playbook -i inventory/ap-southeast-2_aws_ec2.yml site.yml --vault-password-file ~/ansible_challenge.vault
+```
+
+Any questions please feel free to contact me.  Architectural decisions have not been included so please feel free to ask.
 
 ## Bonus Points:
-
-- Add a second non-compliant submission where you would show us how you'd host this content in something other than a VM hosting a single file (e.g. containers or something cloud-native)
-- Consider if you should choose the insult generator one or not (we dare you) :)
+Insult Generater: yes
+Run it is ECS Container: no
+  If you want me to do it to prove that I can do it, please contact me.
