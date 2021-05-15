@@ -64,8 +64,8 @@
     aws_secret_key: "{{ aws_secret_key }}"
   when: item.key not in server_exist
   with_dict: "{{ one_page_challenge }}"
-  notify:
-    - Pause
+  # Just a little pause to ensure ssh is up and online before progressing
+  notify: Pause
 
 - name: Refresh inventory
   meta: refresh_inventory
